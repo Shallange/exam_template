@@ -12,8 +12,12 @@ class Grid:
         # Spelplanen lagras i en lista av listor. Vi använder "list comprehension" för att sätta tecknet för "empty" på varje plats på spelplanen.
         self.data = [[self.empty for y in range(self.width)] for z in range(
             self.height)]
+        
+    #------placera spelaren på spelplanen---------
+    def set_player(self, player):
+        self.player = player
 
-
+    #-----------metoder för item på spelplanen
     def get(self, x, y):
         """Hämta det som finns på en viss position"""
         return self.data[y][x]
@@ -22,13 +26,12 @@ class Grid:
         """Ändra vad som finns på en viss position"""
         self.data[y][x] = value
 
-    def set_player(self, player):
-        self.player = player
-
     def clear(self, x, y):
         """Ta bort item från position"""
         self.set(x, y, self.empty)
 
+
+    #-------------printa ut spelplanen---------------
     def __str__(self):
         """Gör så att vi kan skriva ut spelplanen med print(grid)"""
         xs = ""
@@ -41,8 +44,9 @@ class Grid:
                     xs += str(row[x])
             xs += "\n"
         return xs
+    
 
-
+    #-----------Skapa spelplanens väggar--------------
     def make_walls(self):
         """Skapa väggar runt hela spelplanen"""
         for i in range(self.height):
@@ -54,7 +58,7 @@ class Grid:
             self.set(j, self.height - 1, self.wall)
 
 
-    # Används i filen pickups.py
+    #---------Placering av items på spelplanen(pickups.py)------------
     def get_random_x(self):
         """Slumpa en x-position på spelplanen"""
         return random.randint(0, self.width-1)
@@ -62,7 +66,6 @@ class Grid:
     def get_random_y(self):
         """Slumpa en y-position på spelplanen"""
         return random.randint(0, self.height-1)
-
 
     def is_empty(self, x, y):
         """Returnerar True om det inte finns något på aktuell ruta"""
