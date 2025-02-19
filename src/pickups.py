@@ -1,7 +1,7 @@
 
 class Item:
     """Representerar saker man kan plocka upp."""
-    def __init__(self, name, value=10, symbol="?"):
+    def __init__(self, name, value=20, symbol="?"):#\U0001F353
         self.name = name
         self.value = value
         self.symbol = symbol
@@ -11,14 +11,14 @@ class Item:
 
 
 pickups = [
-        Item("carrot"), 
+        Item("carrot",10), 
         Item("apple"), 
-        Item("strawberry"), 
+        Item("strawberry",20,"\U0001F353"), 
         Item("cherry"), 
         Item("watermelon"), 
-        Item("radish"), 
-        Item("cucumber"), 
-        Item("meatball")
+        Item("radish", 10), 
+        Item("cucumber", 10), 
+        Item("meatball", 10)
     ]
 
 
