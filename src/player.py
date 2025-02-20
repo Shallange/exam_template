@@ -1,3 +1,5 @@
+from .pickups import Item # For checking instance of Maybeitem
+
 class Player:
     marker = "@"#Spelarens ikon på spelplanen
 
@@ -30,7 +32,7 @@ class Player:
             return False
         return True
 
-    def direction(self, command,grid, pickups):
+    def direction(self, command,grid):
         dx = 0 
         dy = 0
 
@@ -43,15 +45,13 @@ class Player:
         elif command == "d":
             dx = 1 # (dx, 0)
         
-        if self.can_move(self.pos_x + dx , self.pos_y + dy,grid):  #här lägger man self och nästa steg om de är en vägg
+        if self.can_move(self.pos_x + dx , self.pos_y + dy,grid):  #Check if planned move is possible(no wall)
             maybe_item = grid.get(self.pos_x + dx , self.pos_y + dy)
             self.move(dx, dy)
             self.score -= 1
-            if isinstance(maybe_item, pickups.Item):
+            if isinstance(maybe_item, Item):
             #we found something
-                self.inventory.append(maybe_item)
-                self.score += maybe_item.value
-                print(f"You found a {maybe_item.name}, +{maybe_item.value} points.")
+                maybe_item.pickup(self)#Depending on the item, Pickupmetod will handle the specific item diffrently
                 grid.set(self.pos_x, self.pos_y, grid.empty)
                 grid.clear(self.pos_x, self.pos_y)
 

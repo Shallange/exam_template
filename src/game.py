@@ -17,9 +17,8 @@ while not command.casefold() in ["q", "x"]:
     player.print_status(g)
     command = input("Use WASD to move, Q/X to quit. ")
     command = command.casefold()[:1]
-    player.direction(command,g,pickups)
+    player.direction(command,g)
     player.show_inventory(command)
     
  
-
 print("Thank you for playing!")
