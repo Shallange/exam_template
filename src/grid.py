@@ -3,7 +3,7 @@ import random
 class Grid:
     """Representerar spelplanen. Du kan ändra standardstorleken och tecknen för olika rutor. """
     width = 36
-    height = 12
+    height = 14
     empty = "."  # Tecken för en tom ruta
     wall = "\u25A0"   #Tecken för en ogenomtränglig vägg  "\u25A0" == ■ in unicode 
 
@@ -39,9 +39,9 @@ class Grid:
             row = self.data[y]
             for x in range(len(row)):
                 if x == self.player.pos_x and y == self.player.pos_y:
-                    xs += "@"
+                    xs += "\U0001f6b6 "
                 else:
-                    xs += str(row[x])
+                    xs += str(row[x]) + " "
             xs += "\n"
         return xs
     
@@ -51,6 +51,12 @@ class Grid:
         """Skapa väggar runt hela spelplanen"""
         for i in range(self.height):
             self.set(0, i, self.wall)
+            if i < 4:
+                self.set(23, i, self.wall)
+                self.set(14, i, self.wall)
+            if i > 8:
+                self.set(10, i, self.wall)
+                self.set(18, i, self.wall)
             self.set(self.width - 1, i, self.wall)
 
         for j in range(1, self.width - 1):
