@@ -1,14 +1,39 @@
-from .pickups import Item # For checking instance of Maybeitem
+from .items import Item, Bomb 
 
 class Player:
-    marker = "@"#Spelarens ikon på spelplanen
 
     def __init__(self, x, y):
         self.pos_x = x
         self.pos_y = y
         self.score = 0
         self.inventory = []
+        self.marker = "\U0001f6b6" 
 
+
+    def print_status(self, game_grid):
+        """Visa spelvärlden och antal poäng."""
+        print("--------------------------------------")
+        print(f"You have {self.score} points.")
+        print(game_grid)
+
+    def have_item(self, type_of_item):
+        """used for checking if type of item is in inventory"""
+        for item in self.inventory:
+            #checks if the current item is an instance of the type_of_item class
+            if isinstance(item, type_of_item):
+                return True
+        return False
+
+
+    #--------Abilities--------
+    def place_bomb(self, command,g):
+        if command == "b":
+            bomb = Bomb("bomb", "\U0001F4A3")
+            g.set(self.pos_x,self.pos_y, bomb)
+            print("Bomb has been planted,  RUUUUUN!! ")
+
+    def have_grace(self):
+        pass 
 
     def show_inventory(self,command):
         if command =="i":
@@ -18,6 +43,13 @@ class Player:
             else:
                 print("inventory empty")
 
+
+    #---------Player movement-------
+    def can_move(self, x, y, grid):
+        if grid.get(x, y) == "\u25A7": # \u25A7 = ▧
+            return False
+        return True
+
     # Flyttar spelaren. "dx" och "dy" är skillnaden
     def move(self, dx, dy):
         """Flyttar spelaren.\n
@@ -25,12 +57,6 @@ class Player:
         dy = vertikal förflyttning, uppifrån och ned"""
         self.pos_x += dx
         self.pos_y += dy
-
-
-    def can_move(self, x, y, grid):
-        if grid.get(x, y) == "\u25A0": # \u25A0 = ■
-            return False
-        return True
 
     def direction(self, command,grid):
         dx = 0 
@@ -54,10 +80,3 @@ class Player:
                 maybe_item.pickup(self)#Depending on the item, Pickupmetod will handle the specific item diffrently
                 grid.set(self.pos_x, self.pos_y, grid.empty)
                 grid.clear(self.pos_x, self.pos_y)
-
-
-    def print_status(self, game_grid):
-        """Visa spelvärlden och antal poäng."""
-        print("--------------------------------------")
-        print(f"You have {self.score} points.")
-        print(game_grid)

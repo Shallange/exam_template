@@ -5,7 +5,7 @@ class Grid:
     width = 36
     height = 14
     empty = "."  # Tecken för en tom ruta
-    wall = "\u25A0"   #Tecken för en ogenomtränglig vägg  "\u25A0" == ■ in unicode 
+    wall = "\u25A7" #Tecken för en ogenomtränglig vägg  "\u25A7" == ▧ in unicode 
 
     def __init__(self):
         """Skapa ett objekt av klassen Grid"""
@@ -39,7 +39,7 @@ class Grid:
             row = self.data[y]
             for x in range(len(row)):
                 if x == self.player.pos_x and y == self.player.pos_y:
-                    xs += "\U0001f6b6 "
+                    xs += self.player.marker.strip()
                 else:
                     xs += str(row[x]) + " "
             xs += "\n"
@@ -62,7 +62,7 @@ class Grid:
         for j in range(1, self.width - 1):
             self.set(j, 0, self.wall)
             self.set(j, self.height - 1, self.wall)
-
+            
 
     #---------Placering av items på spelplanen(pickups.py)------------
     def get_random_x(self):
