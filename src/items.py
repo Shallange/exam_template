@@ -7,10 +7,10 @@ class Item:
     def __str__(self):
         return self.symbol
     
-    def pickup(self, player):
-        player.inventory.append(self)
-        print(f"Picked up an unkown item, maybe i find a use for it later")
-    
+    def interact(self, player):
+        """Default, can be overidden by subclasses"""
+        print("You stumble upon something not knowing what to do, you scratch your head")
+
 
 #---------------Unicode emojis--------#
 strawberry = "\U0001F353"
@@ -30,6 +30,9 @@ class Food(Item):
         super().__init__(name, symbol)
         self.value = value
 
+    def interact(self, player):
+        self.pickup(player)
+        
     def pickup(self, player):
         player.score += self.value
         player.inventory.append(self)
@@ -40,9 +43,14 @@ class Key(Item):
     """Key to open a locked chest"""
     def __init__(self, name, symbol):
         super().__init__(name, symbol)
+    
+    def interact(self, player):
+        self.pickup(player)
+        
     def pickup(self, player):
         player.inventory.append(self)
-        print(f"I found i key, it looks like it is used to unlock a chest")
+        print(f"I found a {self.name}, it looks like it is used to unlock a chest")
+
 
 #---------Interactive items----------
 class Chest(Item):
@@ -54,7 +62,10 @@ class Chest(Item):
         self.locked = locked
         self.value = value
 
-    def pickup(self, player):
+    def interact(self, player):
+        self.unlock(player)
+
+    def unlock(self, player):
         if player.have_item(Key):#check if player has picked up a key
             print("You use the key and opened the chest")  
             player.score += self.value  
@@ -75,8 +86,11 @@ class Trap(Item):
     def __init__(self, name, symbol, armed):
         super().__init__(name, symbol)
         self.armed = armed
+
+    def interact(self, player):
+        self.activate(player)
     
-    def activate():
+    def activate(self, player):
         pass
 
 
@@ -87,7 +101,6 @@ pickups = [
         Food("watermelon", watermelon.strip()), 
         Food("cucumber", cucumber.strip(), 10), 
         Food("meat",meat.strip(), 10) 
-        #Eatibles("cherry"), #unicode for cherry does not exist so plan on finding another
     ]
 
 other = [
@@ -104,8 +117,9 @@ def randomize(grid):
             y = grid.get_random_y()
             if grid.is_empty(x, y):
                 grid.set(x, y, item)
-                break  # avbryt while-loopen, fortsätt med nästa varv i for-loopen
-    #currently places bomb,chest and key 1 of each
+                break 
+    
+    #currently places 1 chest and 1 key
     for item in other:
         while True:
             # slumpa en position tills vi hittar en som är ledig
@@ -113,5 +127,5 @@ def randomize(grid):
             y = grid.get_random_y()
             if grid.is_empty(x, y):
                 grid.set(x, y, item)
-                break  # avbryt while-loopen, fortsätt med nästa varv i for-loopen
+                break 
 

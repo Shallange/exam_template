@@ -77,6 +77,6 @@ class Player:
             self.score -= 1
             if isinstance(maybe_item, Item):
             #we found something
-                maybe_item.pickup(self)#Depending on the item, Pickupmetod will handle the specific item diffrently
+                maybe_item.interact(self)#Depending on the item, interact method will handle the specific item diffrently
                 grid.set(self.pos_x, self.pos_y, grid.empty)
                 grid.clear(self.pos_x, self.pos_y)
