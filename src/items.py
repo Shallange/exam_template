@@ -7,7 +7,7 @@ class Item:
     def __str__(self):
         return self.symbol
     
-    def interact(self, player):
+    def interact(self):
         """Default, can be overidden by subclasses"""
         print("You stumble upon something not knowing what to do, you scratch your head")
 
@@ -51,6 +51,10 @@ class Key(Item):
         player.inventory.append(self)
         print(f"I found a {self.name}, it looks like it is used to unlock a chest")
 
+class Shovel(Item):
+    def __init__(self, name, symbol="?"):
+        super().__init__(name, symbol)
+    pass
 
 #---------Interactive items----------
 class Chest(Item):
@@ -95,18 +99,20 @@ class Trap(Item):
 
 
 pickups = [
-        Food("carrot",carrot.strip(), 10), 
-        Food("apple",apple.strip(),), 
-        Food("strawberry", strawberry.strip()), 
-        Food("watermelon", watermelon.strip()), 
-        Food("cucumber", cucumber.strip(), 10), 
-        Food("meat",meat.strip(), 10) 
+        Food("Carrot",carrot, 10), 
+        Food("Apple",apple,), 
+        Food("Strawberry", strawberry), 
+        Food("Watermelon", watermelon), 
+        Food("Cucumber", cucumber, 10), 
+        Food("Meat",meat, 10) 
     ]
 
 other = [
-    Chest("Chest",chest.strip() ,True),
-    Key("key",key.strip() )
+    Chest("Chest",chest,True),
+    Key("Key",key)
     ]
+
+
 
 #-----------------Place the items---------
 def randomize(grid):
@@ -129,3 +135,14 @@ def randomize(grid):
                 grid.set(x, y, item)
                 break 
 
+def fertile_soil(grid, num_moves):
+    if num_moves == 25:
+        item = grid.random_one_item(pickups)
+        x = grid.get_random_x()
+        y = grid.get_random_y()
+        if grid.is_empty(x, y):
+            grid.set(x, y, item)
+
+
+
+    

@@ -4,8 +4,8 @@ class Grid:
     """Representerar spelplanen. Du kan ändra standardstorleken och tecknen för olika rutor. """
     width = 36
     height = 14
-    empty = "."  # Tecken för en tom ruta
-    wall = "\u25A7" #Tecken för en ogenomtränglig vägg  "\u25A7" == ▧ in unicode 
+    empty = ". "  # Tecken för en tom ruta (space is needed)
+    wall = "\u25A7 " #Tecken för en ogenomtränglig vägg  "\u25A7" == ▧ in unicode (space needed in string)
 
     def __init__(self):
         """Skapa ett objekt av klassen Grid"""
@@ -39,9 +39,9 @@ class Grid:
             row = self.data[y]
             for x in range(len(row)):
                 if x == self.player.pos_x and y == self.player.pos_y:
-                    xs += self.player.marker.strip()
+                    xs += self.player.marker
                 else:
-                    xs += str(row[x]) + " "
+                    xs += str(row[x]) 
             xs += "\n"
         return xs
     
@@ -64,7 +64,7 @@ class Grid:
             self.set(j, self.height - 1, self.wall)
             
 
-    #---------Placering av items på spelplanen(pickups.py)------------
+    #---------Methods for being able to place items and also save that position------------
     def get_random_x(self):
         """Slumpa en x-position på spelplanen"""
         return random.randint(0, self.width-1)
@@ -76,4 +76,9 @@ class Grid:
     def is_empty(self, x, y):
         """Returnerar True om det inte finns något på aktuell ruta"""
         return self.get(x, y) == self.empty
+    
+    def random_one_item(self,items):
+        """Used for fertilizied soil, to spawn one random type of food"""
+        spawn_new_item = random.choice(items)
+        return spawn_new_item
 

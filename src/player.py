@@ -7,13 +7,14 @@ class Player:
         self.pos_y = y
         self.score = 0
         self.inventory = []
-        self.marker = "\U0001f6b6" 
+        self.marker = "\U0001f6b6"
 
 
-    def print_status(self, game_grid):
+    def print_status(self, game_grid, number_of_moves):
         """Visa spelvärlden och antal poäng."""
         print("--------------------------------------")
         print(f"You have {self.score} points.")
+        print(f"Currently {number_of_moves} number of moves have been made")
         print(game_grid)
 
     def have_item(self, type_of_item):
@@ -26,7 +27,7 @@ class Player:
 
 
     #--------Abilities--------
-    def place_bomb(self, command,g):
+    def place_bomb(self, command, g):
         if command == "b":
             bomb = Bomb("bomb", "\U0001F4A3")
             g.set(self.pos_x,self.pos_y, bomb)
@@ -34,8 +35,13 @@ class Player:
 
     def have_grace(self):
         pass 
+    
+    def disarm_trap(self, command, g):
+       #if command == "t" 
+        pass
 
-    def show_inventory(self,command):
+
+    def show_inventory(self, command):
         if command =="i":
             if self.inventory != None:
                 for item in self.inventory:
@@ -46,7 +52,7 @@ class Player:
 
     #---------Player movement-------
     def can_move(self, x, y, grid):
-        if grid.get(x, y) == "\u25A7": # \u25A7 = ▧
+        if grid.get(x, y) == "\u25A7 ": # \u25A7 = ▧
             return False
         return True
 
@@ -58,7 +64,7 @@ class Player:
         self.pos_x += dx
         self.pos_y += dy
 
-    def direction(self, command,grid):
+    def direction(self, command, grid):
         dx = 0 
         dy = 0
 
@@ -78,5 +84,4 @@ class Player:
             if isinstance(maybe_item, Item):
             #we found something
                 maybe_item.interact(self)#Depending on the item, interact method will handle the specific item diffrently
-                grid.set(self.pos_x, self.pos_y, grid.empty)
                 grid.clear(self.pos_x, self.pos_y)
