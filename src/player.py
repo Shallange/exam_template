@@ -1,4 +1,4 @@
-from .items import Item, Bomb 
+from .items import Item, Bomb, Shovel 
 
 class Player:
 
@@ -20,18 +20,28 @@ class Player:
     def have_item(self, type_of_item):
         """used for checking if type of item is in inventory"""
         for item in self.inventory:
-            #checks if the current item is an instance of the type_of_item class
             if isinstance(item, type_of_item):
                 return True
         return False
 
-
+    def remove_item_from_inventory(self, item_type):
+        """Remove one item from inventory by its type."""
+        for index, item in enumerate(self.inventory):
+            if isinstance(item, item_type):
+                self.inventory.pop(index) 
+                print(f"{item.name} has been used and removed from your inventory.")
+        print("No item of this type found in inventory.")
+        return None
+    
     #--------Abilities--------
     def place_bomb(self, command, g):
+        """Places a bomb at player location, the bomb is added to a list of placed bomb to update countdown"""
         if command == "b":
-            bomb = Bomb("bomb", "\U0001F4A3")
+            bomb = Bomb("bomb", "\U0001F4A3",self.pos_x, self.pos_y)
             g.set(self.pos_x,self.pos_y, bomb)
+            g.active_bombs.append(bomb)
             print("Bomb has been planted,  RUUUUUN!! ")
+            return True
 
     def have_grace(self):
         pass 
@@ -82,6 +92,10 @@ class Player:
             self.move(dx, dy)
             self.score -= 1
             if isinstance(maybe_item, Item):
-            #we found something
-                maybe_item.interact(self)#Depending on the item, interact method will handle the specific item diffrently
-                grid.clear(self.pos_x, self.pos_y)
+                remove_item_from_grid = maybe_item.interact(self)#Depending on the item, interact method will handle the specific item diffrently
+                if remove_item_from_grid:
+                    grid.clear(self.pos_x, self.pos_y)
+        else:
+            if self.have_item(Shovel):
+                Shovel.dig(self,grid, self.pos_x + dx, self.pos_y + dy)
+                self.remove_item_from_inventory(Shovel)

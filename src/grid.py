@@ -10,6 +10,7 @@ class Grid:
     def __init__(self):
         """Skapa ett objekt av klassen Grid"""
         # Spelplanen lagras i en lista av listor. Vi använder "list comprehension" för att sätta tecknet för "empty" på varje plats på spelplanen.
+        self.active_bombs = [] # list of placed bombs on grid by player
         self.data = [[self.empty for y in range(self.width)] for z in range(
             self.height)]
         
@@ -30,6 +31,13 @@ class Grid:
         """Ta bort item från position"""
         self.set(x, y, self.empty)
 
+    def update_bombs(self):
+        """For each bomb in list of bombs check if they have exoloded and remove from list if so"""
+        for bomb in self.active_bombs:
+            if bomb.tick():
+                self.clear(bomb.pos_x, bomb.pos_y)
+                self.active_bombs.remove(bomb)
+        
 
     #-------------printa ut spelplanen---------------
     def __str__(self):
@@ -41,7 +49,7 @@ class Grid:
                 if x == self.player.pos_x and y == self.player.pos_y:
                     xs += self.player.marker
                 else:
-                    xs += str(row[x]) 
+                    xs += str(row[x])
             xs += "\n"
         return xs
     

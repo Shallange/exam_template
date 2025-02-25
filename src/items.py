@@ -23,6 +23,11 @@ carrot = "\U0001F955"
 key = "\U0001F511"
 bomb = "\U0001F4A3"
 chest = "\U0001F9F0"
+trap = "\U0001FAA4 "
+shovel = "\U0001F944"
+
+enemy = "\U0001F93A"# fencer
+enemy2 = "\U0001F977" # ninja
 
 #---------Pickable items------------
 class Food(Item):
@@ -31,12 +36,13 @@ class Food(Item):
         self.value = value
 
     def interact(self, player):
-        self.pickup(player)
+        return self.pickup(player)
         
     def pickup(self, player):
         player.score += self.value
         player.inventory.append(self)
         print(f"You found a {self.name}, +{self.value} points.")
+        return True
 
 
 class Key(Item):
@@ -45,46 +51,78 @@ class Key(Item):
         super().__init__(name, symbol)
     
     def interact(self, player):
-        self.pickup(player)
+        return self.pickup(player)
         
     def pickup(self, player):
         player.inventory.append(self)
         print(f"I found a {self.name}, it looks like it is used to unlock a chest")
+        return True
+
 
 class Shovel(Item):
     def __init__(self, name, symbol="?"):
         super().__init__(name, symbol)
-    pass
+    
+    def interact(self, player):
+        return self.pickup(player)
+    
+    def pickup(self, player):
+        player.inventory.append(self)
+        print(f"I found a {self.name}, i should be able to remove a wall piece now")
+        return True
+
+    def dig(self,grid, x, y):
+        grid.clear(x, y)
+        print("You've used the shovel to remove a wall")
+        return True
+    
+    
 
 #---------Interactive items----------
 class Chest(Item):
     """Locked chest that will need a key to open 
        inside a treasure worth 100 points
     """
-    def __init__(self, name, symbol,locked, value = 100):
+    def __init__(self, name, symbol, value = 100):
         super().__init__(name, symbol)
-        self.locked = locked
         self.value = value
 
     def interact(self, player):
-        self.unlock(player)
+        return self.unlock(player)
 
     def unlock(self, player):
         if player.have_item(Key):#check if player has picked up a key
             print("You use the key and opened the chest")  
-            player.score += self.value  
-            #remvove key from inventory
+            player.score += self.value
+            player.remove_item_from_inventory(Key)
+            return True
         else:
             print("Chest is locked.. better find a key")
+            return False
         
 #----------Dangerous items---------
 class Bomb(Item):
     """Currently undergoing changes"""
-    def __init__(self, name, symbol):
+    def __init__(self, name, symbol, x, y, countdown = 5):
         super().__init__(name, symbol)
+        self.countdown = countdown
+        self.pos_x = x
+        self.pos_y = y
+
+    def interact(self):
+        return False
     
-    def explode():
-        pass
+    def tick(self):
+        """Each Move player makes, the bomb will tick and then explode"""
+        self.countdown -= 1
+        if self.countdown <= 0:
+            self.explode()
+            return True
+        return False
+    
+    def explode(self):
+        print("Bomb has exploded")
+    
 
 class Trap(Item):
     def __init__(self, name, symbol, armed):
@@ -108,8 +146,12 @@ pickups = [
     ]
 
 other = [
-    Chest("Chest",chest,True),
-    Key("Key",key)
+    Chest("Chest",chest),
+    Chest("Chest",chest),
+    Key("Key",key),
+    Key("Key",key),
+    Trap("Trap",trap, True),
+    Shovel("Shovel", shovel)
     ]
 
 
