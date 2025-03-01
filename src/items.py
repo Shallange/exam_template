@@ -41,7 +41,7 @@ class Food(Item):
     def pickup(self, player):
         player.score += self.value
         player.inventory.append(self)
-        print(f"You found a {self.name}, +{self.value} points.")
+        print(f"You found a {self.name}, + {self.value} points.")
         return True
 
 
@@ -76,7 +76,6 @@ class Shovel(Item):
         print("You've used the shovel to remove a wall")
         return True
     
-    
 
 #---------Interactive items----------
 class Chest(Item):
@@ -100,10 +99,11 @@ class Chest(Item):
             print("Chest is locked.. better find a key")
             return False
         
+
 #----------Dangerous items---------
 class Bomb(Item):
-    """Currently undergoing changes"""
-    def __init__(self, name, symbol, x, y, countdown = 5):
+    """Bomb is placed by player and it will explode after 3 player moves"""
+    def __init__(self, name, symbol, x, y, countdown = 4):
         super().__init__(name, symbol)
         self.countdown = countdown
         self.pos_x = x
@@ -125,17 +125,32 @@ class Bomb(Item):
     
 
 class Trap(Item):
-    def __init__(self, name, symbol, armed):
+
+    def __init__(self, name, symbol, num_of_activations=3):
         super().__init__(name, symbol)
-        self.armed = armed
+        self.num_of_activations = num_of_activations
 
     def interact(self, player):
-        self.activate(player)
-    
+        if self.num_of_activations > 0:
+            return self.activate(player)
+        
+
     def activate(self, player):
+        player.score -= 10
+        self.num_of_activations -= 1
+        if self.num_of_activations == 0:
+            return True # Removes Trap from grid
+        return False# Keeps the Trap on the grid
+
+class Exit(Item):
+    def __init__(self, name, symbol = "E"):
+        super().__init__(name, symbol)
+
+    def interact(self):
         pass
 
 
+    
 pickups = [
         Food("Carrot",carrot, 10), 
         Food("Apple",apple,), 
@@ -150,40 +165,34 @@ other = [
     Chest("Chest",chest),
     Key("Key",key),
     Key("Key",key),
-    Trap("Trap",trap, True),
-    Shovel("Shovel", shovel)
+    Trap("Trap",trap),
+    Shovel("Shovel", shovel),
+    Exit("Exit")
     ]
 
 
-
 #-----------------Place the items---------
-def randomize(grid):
-    for item in pickups:
-        while True:
-            # slumpa en position tills vi hittar en som är ledig
-            x = grid.get_random_x()
-            y = grid.get_random_y()
-            if grid.is_empty(x, y):
-                grid.set(x, y, item)
-                break 
-    
-    #currently places 1 chest and 1 key
-    for item in other:
-        while True:
-            # slumpa en position tills vi hittar en som är ledig
-            x = grid.get_random_x()
-            y = grid.get_random_y()
-            if grid.is_empty(x, y):
-                grid.set(x, y, item)
-                break 
-
-def fertile_soil(grid, num_moves):
-    if num_moves == 25:
-        item = grid.random_one_item(pickups)
+def place_item(grid, item):
+    while True:
+        # Randomize a position until we find a position that is empty
         x = grid.get_random_x()
         y = grid.get_random_y()
         if grid.is_empty(x, y):
             grid.set(x, y, item)
+            break 
+    
+def randomize(grid):
+    for item in pickups:
+        place_item(grid, item)
+
+    for item in other:
+        place_item(grid, item)
+
+def fertile_soil(grid, num_moves):
+    if num_moves % 25 == 0:
+        item = grid.random_one_item(pickups)
+        place_item(grid, item)
+
 
 
 
