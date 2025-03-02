@@ -1,4 +1,4 @@
-from .items import Item, Bomb, Shovel 
+from .items import Item, Bomb, Shovel ,Trap
 
 class Player:
 
@@ -58,12 +58,17 @@ class Player:
                     print("You have no active blessings, pick something up and you shall be blessed")
             case "check grace":
                 return self.grace_period > 0
-
     
     def disarm_trap(self, command, g):
-       """Disarm a nearby trap if command is 't'"""
-       if command == "t":
-        pass
+        """Disarm a nearby trap if command is 't'"""
+        if command == "t":
+            adjesent_cord = g.get_surrounding_cordinates(self.pos_x, self.pos_y)
+            for x, y in adjesent_cord:
+               maybe_trap = g.get(x ,y)
+               if isinstance(maybe_trap, Trap):
+                   g.clear(x,y)
+                   print("Trap have been spotted and have been successfully been disarmed")
+                   
 
     def show_inventory(self, command):
         """Show inventory if command is 'i'"""
@@ -94,7 +99,7 @@ class Player:
         """Update the player's direction based on command and handle the interaction with items"""
         dx = 0 
         dy = 0
-
+        
         if command == "w":
             dy = -1 # (0, dy)
         elif command == "a":
@@ -104,7 +109,7 @@ class Player:
         elif command == "d":
             dx = 1 # (dx, 0)
         
-        if self.can_move(self.pos_x + dx , self.pos_y + dy,grid):  #Check if planned move is possible(no wall)
+        if self.can_move(self.pos_x + dx , self.pos_y + dy, grid):  #Check if planned move is possible(no wall)
             maybe_item = grid.get(self.pos_x + dx , self.pos_y + dy)
             self.move(dx, dy)
             if not self.have_grace("check grace"):

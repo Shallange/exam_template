@@ -25,9 +25,8 @@ bomb = "\U0001F4A3"
 chest = "\U0001F9F0"
 trap = "\U0001FAA4 "
 shovel = "\U0001F944"
+fire = "\U0001F525"
 
-enemy = "\U0001F93A"# fencer
-enemy2 = "\U0001F977" # ninja
 
 #---------Pickable items------------
 class Food(Item):
@@ -109,19 +108,24 @@ class Bomb(Item):
         self.pos_x = x
         self.pos_y = y
 
-    def interact(self):
+    def interact(self, player):
         return False
     
-    def tick(self):
+    def tick(self, grid):
         """Each Move player makes, the bomb will tick and then explode"""
         self.countdown -= 1
         if self.countdown <= 0:
-            self.explode()
+            self.explode(grid)
             return True
         return False
     
-    def explode(self):
+    def explode(self, grid):
+        """This is called when coutndown reaches 0 it sets the area ablaze"""
         print("Bomb has exploded")
+        explosion_radius = grid.get_surrounding_cordinates(self.pos_x, self.pos_y)
+        explosion_radius.append((self.pos_x,self.pos_y))# added here to also set the center position ablaze
+        for x, y in explosion_radius:
+            grid.set(x,y, fire)
     
 
 class Trap(Item):
@@ -134,21 +138,12 @@ class Trap(Item):
         if self.num_of_activations > 0:
             return self.activate(player)
         
-
     def activate(self, player):
         player.score -= 10
         self.num_of_activations -= 1
         if self.num_of_activations == 0:
             return True # Removes Trap from grid
         return False# Keeps the Trap on the grid
-
-class Exit(Item):
-    def __init__(self, name, symbol = "E"):
-        super().__init__(name, symbol)
-
-    def interact(self):
-        pass
-
 
     
 pickups = [
@@ -166,8 +161,7 @@ other = [
     Key("Key",key),
     Key("Key",key),
     Trap("Trap",trap),
-    Shovel("Shovel", shovel),
-    Exit("Exit")
+    Shovel("Shovel", shovel)
     ]
 
 
@@ -189,6 +183,7 @@ def randomize(grid):
         place_item(grid, item)
 
 def fertile_soil(grid, num_moves):
+    """Spawns a new item of type food when number of moves is 25,50,75 and so on"""
     if num_moves % 25 == 0:
         item = grid.random_one_item(pickups)
         place_item(grid, item)

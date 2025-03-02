@@ -36,10 +36,22 @@ class Grid:
     def update_bombs(self):
         """Check  each bomb in the list to see if they have exploded and remove them from the list of active bombs"""
         for bomb in self.active_bombs:
-            if bomb.tick():
-                self.clear(bomb.pos_x, bomb.pos_y)
+            if bomb.tick(self):
                 self.active_bombs.remove(bomb)
-        
+    
+    def get_surrounding_cordinates(self, x, y):
+        """Returns the adjesent cordinates to the object position"""
+        cordinates = [
+            (-1, -1),(0, -1),(1, -1),# Upper row: NW,N,NE
+            (-1, 0),(1, 0), # Middle row: W, E 
+            (-1, 1),(0, 1),(1, 1) # Lower row: SW,S,WE
+        ]
+        cordinates_adjesent_to_object = []
+        for dx, dy in cordinates:
+            adj_x = x + dx
+            adj_y = y + dy
+            cordinates_adjesent_to_object.append((adj_x, adj_y))
+        return cordinates_adjesent_to_object
 
     #-------------Print the game grid---------------
     def __str__(self):

@@ -1,0 +1,62 @@
+https://github.com/Shallange/exam_template
+
+
+------------------version 1 - grundkrav------------------
+
+✓-1. Spelaren ska börja nära mitten av rummet.        
+
+✓-2. Förflyttningar i alla 4 riktningar. (WASD)       
+
+✓-3. Man ska inte kunna gå igenom väggar.
+
+✓-4. Fruktsallad - alla frukter ska vara värda 20 poäng i stället för 10.
+
+✓-5. Inventory - alla saker som man plockar upp ska sparas i en lista.
+
+✓-6. Nytt kommando: "i", skriver ut innehållet i spelarens inventory.
+
+✓-7. The floor is lava - för varje steg man går ska man tappa 1 poäng.
+
+✓-8. Använd for-loopar för att skapa flera, sammanhängande väggar på kartan. 
+   Se till att det inte skapas några rum som man inte kan komma in i. Gör detta i filen grid.py.
+
+
+------------------Version 2 - nice to have------------------
+
+✓-1. Fällor - introducera valfri fälla till spelplanen. Om man går på en ruta med en fälla ska man förlora 10 poäng. 
+    Fällan ska ligga kvar så att man kan falla i den flera gånger.
+
+✓-2. Spade - en ny sak man kan plocka upp. När man går in i en vägg nästa gång, förbrukas spaden för att ta bort väggen.
+
+✓-3. Nycklar och kistor - slumpa minst en nyckel och lika många kistor på spelplanen. 
+   När man går på en ruta med en nyckel plockar man upp den i sitt inventory. Om man kommer till en kista och har minst en nyckel, 
+   öppnar man kistan och plockar upp en skatt som är värd 100 poäng. (Nyckeln är förbrukad.)
+
+✓-4. Bördig jord - efter varje 25:e drag skapas en ny frukt/grönsak någonstans på kartan.
+
+5. Exit - slumpa ett "E" på kartan. När man har plockat upp alla ursprungliga saker, 
+   kan man gå till exit för att vinna spelet. Men innan man tagit upp alla har inte Exit någon effekt.
+
+6. Jump - om man skriver ett "J" innan något av "WASD", ska spelaren hoppa över en ruta. 
+   Man förflyttar sig alltså två steg, men kan förstås bara plocka upp eller interagera med saker där man landar. 
+   Hoppar man in i en vägg blir det samma effekt som om man hade gått ett steg på vanligt sätt.
+
+
+------------------Version 3 - extra utmaning------------------
+
+✓-1. Grace period - efter man har tagit plockat upp något, kan man gå 5 steg utan att det dras några poäng.
+
+2. AI-fiender - placera 1-3 fiender på kartan. 
+   För varje steg spelaren tar ska ska varje fiende ha en slumpmässig chans att flytta sig ett steg närmare spelaren. 
+   Minus 20 poäng om en fiende hinner ifatt. 
+   (Inte diagonalt, dvs. samma rörelsemönster som spelaren. Fienderna ska vara lite "långsammare" så att det är lagom svårt att undvika dem.)
+
+✓-3. Tryck "B" för att placera en bomb. Efter 3 drag smäller bomben och förstör allt på sin ruta och de åtta som gränsar till den. 
+   (fällor, väggar, m.m.) Om spelaren är kvar förlorar man poäng.
+
+✓4. Ett nytt kommando ("T" för trap) för att desarmera fällor.
+
+
+
+Även lagt till Highscore textfil som sparar Highscore från tidigare rundor
+
